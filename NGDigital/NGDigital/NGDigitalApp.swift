@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct NGDigitalApp: App {
-    @StateObject var gatekeeper = GateKeeper()
+    @StateObject var gk = GateKeeper()
     init() {
             let appearance = UITabBarAppearance()
             appearance.configureWithDefaultBackground()
@@ -41,7 +41,12 @@ struct NGDigitalApp: App {
         }
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(gatekeeper)
+            if gk.appSettings.authToken.isEmpty{
+                LoginView()
+            }else{
+            ContentView().environmentObject(gk)
+            }
+            
         }
     }
 }

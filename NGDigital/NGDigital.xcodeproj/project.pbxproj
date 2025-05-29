@@ -14,6 +14,9 @@
 		378E1CA12DE5250D0072236D /* GateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378E1CA02DE5250D0072236D /* GateKeeper.swift */; };
 		378E1CA32DE525A60072236D /* DataLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378E1CA22DE525A60072236D /* DataLayer.swift */; };
 		378E1CA52DE5264A0072236D /* HomeHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378E1CA42DE5264A0072236D /* HomeHub.swift */; };
+		378E1CA82DE635120072236D /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378E1CA72DE635120072236D /* RegisterView.swift */; };
+		378E1CAA2DE635870072236D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378E1CA92DE635870072236D /* KeychainService.swift */; };
+		378E1CAC2DE635B80072236D /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 378E1CAB2DE635B80072236D /* LoginView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +28,10 @@
 		378E1CA02DE5250D0072236D /* GateKeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GateKeeper.swift; sourceTree = "<group>"; };
 		378E1CA22DE525A60072236D /* DataLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLayer.swift; sourceTree = "<group>"; };
 		378E1CA42DE5264A0072236D /* HomeHub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHub.swift; sourceTree = "<group>"; };
+		378E1CA62DE61E460072236D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		378E1CA72DE635120072236D /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
+		378E1CA92DE635870072236D /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		378E1CAB2DE635B80072236D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,11 +64,15 @@
 		378E1C902DE523EA0072236D /* NGDigital */ = {
 			isa = PBXGroup;
 			children = (
+				378E1CA62DE61E460072236D /* Info.plist */,
 				378E1C9F2DE5248C0072236D /* Managers */,
 				378E1C912DE523EA0072236D /* NGDigitalApp.swift */,
 				378E1C932DE523EA0072236D /* ContentView.swift */,
 				378E1C952DE523F10072236D /* Assets.xcassets */,
 				378E1C972DE523F10072236D /* Preview Content */,
+				378E1CA72DE635120072236D /* RegisterView.swift */,
+				378E1CA92DE635870072236D /* KeychainService.swift */,
+				378E1CAB2DE635B80072236D /* LoginView.swift */,
 			);
 			path = NGDigital;
 			sourceTree = "<group>";
@@ -157,7 +168,10 @@
 				378E1C942DE523EA0072236D /* ContentView.swift in Sources */,
 				378E1CA32DE525A60072236D /* DataLayer.swift in Sources */,
 				378E1CA52DE5264A0072236D /* HomeHub.swift in Sources */,
+				378E1CA82DE635120072236D /* RegisterView.swift in Sources */,
+				378E1CAA2DE635870072236D /* KeychainService.swift in Sources */,
 				378E1CA12DE5250D0072236D /* GateKeeper.swift in Sources */,
+				378E1CAC2DE635B80072236D /* LoginView.swift in Sources */,
 				378E1C922DE523EA0072236D /* NGDigitalApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -292,6 +306,10 @@
 				DEVELOPMENT_TEAM = 897QSY45XD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NGDigital/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is needed to take photos.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "something here for later";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Access to photos is needed to upload or share images.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -321,6 +339,10 @@
 				DEVELOPMENT_TEAM = 897QSY45XD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NGDigital/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is needed to take photos.";
+				INFOPLIST_KEY_NSContactsUsageDescription = "something here for later";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Access to photos is needed to upload or share images.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

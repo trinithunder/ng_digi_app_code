@@ -12,7 +12,7 @@ import SwiftUI
 extension GateKeeper {
     func loadThatJSON<T: Decodable>(from endpoint: String, as type: T.Type) async -> Result<T, Error> {
         let maxRetries = 3
-        let baseURL = user.appSettings.backendURL
+        let baseURL = AppSettings.backendURL
         guard let url = URL(string: "\(baseURL)/\(endpoint)") else {
             return .failure(URLError(.badURL))
         }
@@ -43,7 +43,7 @@ extension GateKeeper {
     }
     
     func featureEnabled(_ key: String) -> Bool {
-            user.appSettings.features[key] ?? false
+            return AppSettings.features == key
         }
 }
 
@@ -285,6 +285,104 @@ struct TabBarContainerView: View {
         }
     }
 }
+
+struct DeviceInfoView: View {
+    @State private var deviceInfo: [String: String] = [:]
+
+    var body: some View {
+        NavigationView {
+            List(deviceInfo.sorted(by: { $0.key < $1.key }), id: \.key) { key, value in
+                HStack {
+                    Text(key).fontWeight(.semibold)
+                    Spacer()
+                    Text(value).multilineTextAlignment(.trailing)
+                }
+            }
+            .navigationTitle("Device Info")
+            .onAppear(perform: gatherDeviceInfo)
+        }
+    }
+
+    private func gatherDeviceInfo() {
+        let device = UIDevice.current
+        let screen = UIScreen.main
+        UIDevice.current.isBatteryMonitoringEnabled = true
+
+        var info: [String: String] = [
+            "Device Name": device.name,
+            "Model": device.model,
+            "Localized Model": device.localizedModel,
+            "System Name": device.systemName,
+            "System Version": device.systemVersion,
+            "Identifier (UUID)": device.identifierForVendor?.uuidString ?? "N/A",
+            "Battery Level": "\(Int(device.batteryLevel * 100))%",
+            "Battery State": "\(device.batteryState.stringValue)",
+            "Screen Width": "\(screen.bounds.width)",
+            "Screen Height": "\(screen.bounds.height)",
+            "Screen Scale": "\(screen.scale)",
+            "Language": Locale.current.languageCode ?? "Unknown",
+            "Region": Locale.current.regionCode ?? "Unknown",
+            "Time Zone": TimeZone.current.identifier,
+            "App Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "N/A",
+            "Build Number": Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "N/A"
+        ]
+
+        if let attrs = try? FileManager.default.attributesOfFileSystem(forPath: NSHomeDirectory()),
+           let free = attrs[.systemFreeSize] as? NSNumber,
+           let total = attrs[.systemSize] as? NSNumber {
+            info["Free Disk Space"] = "\(free.int64Value / (1024 * 1024)) MB"
+            info["Total Disk Space"] = "\(total.int64Value / (1024 * 1024)) MB"
+        }
+
+        self.deviceInfo = info
+    }
+}
+
+extension UIDevice.BatteryState {
+    var stringValue: String {
+        switch self {
+        case .charging: return "Charging"
+        case .full: return "Full"
+        case .unplugged: return "Unplugged"
+        case .unknown: fallthrough
+        @unknown default: return "Unknown"
+        }
+    }
+}
+
+enum AppTheme: String, CaseIterable {
+    case system, light, dark
+}
+
+struct ThemeManager {
+    static func getColorScheme(from string: String) -> ColorScheme? {
+        switch AppTheme(rawValue: string) {
+        case .light: return .light
+        case .dark: return .dark
+        default: return nil
+        }
+    }
+}
+
+struct ThemePickerView: View {
+    @AppStorage("selectedTheme") private var selectedTheme: String = "system"
+
+    var body: some View {
+        Picker("App Theme", selection: $selectedTheme) {
+            Text("System").tag("system")
+            Text("Light").tag("light")
+            Text("Dark").tag("dark")
+        }
+        .pickerStyle(.segmented)
+        .padding()
+    }
+}
+
+
+
+
+//I feel like I'm going to need access to device volume and the switch on the device...this probally will happen around when I'm working on video and audio functions.
+
 
 
 
