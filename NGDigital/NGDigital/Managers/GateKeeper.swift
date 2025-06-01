@@ -32,8 +32,9 @@ class GateKeeper: ObservableObject {
     let locale = Locale.current
     let timeZone = TimeZone.current
     let permissionsCenter = PermissionsCenterView()
-    let appSettings = AppSettings()
+    @Published var appSettings = AppSettings()
     let bluetoothManager = BluetoothPermissionManager()
+    let keyChain = KeychainService()
     
     init() {
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -151,6 +152,22 @@ class GateKeeper: ObservableObject {
         .frame(width: imageWidth, height: imageHeight)
 
     }
+    
+    func addSoundToVideo(originalVideo: URL, musicFile: URL, completion: @escaping (URL?) -> Void) {
+        let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("final_merged.mov")
+
+        VideoAudioMerger.merge(videoURL: originalVideo, with: musicFile, outputURL: outputURL) { result in
+            switch result {
+            case .success(let finalVideoURL):
+                print("Final video with music: \(finalVideoURL)")
+                completion(finalVideoURL)
+            case .failure(let error):
+                print("Failed to merge audio: \(error)")
+                completion(nil)
+            }
+        }
+    }
+
 }
 
 class BluetoothPermissionManager: NSObject, CBCentralManagerDelegate {

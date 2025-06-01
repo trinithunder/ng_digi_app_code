@@ -13,21 +13,24 @@ struct LoginView: View {
     @State private var password = ""
     @State private var errorMessage = ""
     @State private var isLoading = false
+    @State private var shouldNavigate = false
     @AppStorage("useBiometrics") var useBiometrics = false
     @AppStorage("authToken") var authToken = ""
 
     var body: some View {
         SmartNavigation {
             VStack(spacing: 16) {
-                Text("Login")
-                    .font(.largeTitle).bold()
+                Group{
+                    Text("Login")
+                        .font(.largeTitle).bold()
 
-                TextField("Email", text: $email)
-                    .textFieldStyle(.roundedBorder)
-                    .autocapitalization(.none)
+                    TextField("Email", text: $email)
+                        .textFieldStyle(.roundedBorder)
+                        .autocapitalization(.none)
 
-                SecureField("Password", text: $password)
-                    .textFieldStyle(.roundedBorder)
+                    SecureField("Password", text: $password)
+                        .textFieldStyle(.roundedBorder)
+                }
 
                 if !errorMessage.isEmpty {
                     Text(errorMessage).foregroundColor(.red)
@@ -45,6 +48,19 @@ struct LoginView: View {
                     }
                     .buttonStyle(.bordered)
                 }
+                
+                NavigationLink(destination: ContentView(), isActive: $shouldNavigate) {
+                                EmptyView()
+                            }
+
+                            Button("Login") {
+                                isLoading = true
+                                login()
+                            }
+
+                            if isLoading {
+                                ProgressView()
+                            }
 
                 Divider()
 
@@ -86,7 +102,7 @@ struct LoginView: View {
         }
     }
     
-    func login(){
+    func login() {
         guard !email.isEmpty, !password.isEmpty else {
             errorMessage = "Please fill all fields correctly"
             return
@@ -95,13 +111,12 @@ struct LoginView: View {
         isLoading = true
         errorMessage = ""
 
-        let url = URL(string: "https://lightek.diy/login")! // Adjust to match your backend
+        let url = URL(string: "https://lightek.diy/login")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         let body = [
-                "email": email,
+            "email": email,
             "password": password
-            
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -115,21 +130,32 @@ struct LoginView: View {
                     return
                 }
 
-                guard let httpResponse = response as? HTTPURLResponse else {
+                guard let httpResponse = response as? HTTPURLResponse,
+                      let data = data else {
                     errorMessage = "Invalid server response"
                     return
                 }
 
                 if (200...299).contains(httpResponse.statusCode) {
-                    // Login successful
-                    errorMessage = ""
-                    // TODO: Navigate to next screen
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let user = json["user"] as? [String: Any],
+                           let token = user["auth_token"] as? String {
+                            self.authToken = token
+                            self.shouldNavigate = true
+                        } else {
+                            self.errorMessage = "Unexpected response format"
+                        }
+                    } catch {
+                        self.errorMessage = "Failed to parse JSON: \(error.localizedDescription)"
+                    }
                 } else {
                     errorMessage = "Failed authorization (status: \(httpResponse.statusCode))"
                 }
             }
         }.resume()
     }
+
     }
 
 
